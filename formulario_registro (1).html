@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Profesionales</title>
+<style>
+  :root{
+    --bg: #FAF8F2;
+    --card: #FFFFFF;
+    --ink: #1A2420;
+    --ink-soft: #4C5A55;
+    --teal: #17453D;
+    --teal-deep: #0E2E29;
+    --yellow: #F7B500;
+    --yellow-deep: #E5A400;
+    --sage: #C7DAD1;
+    --sage-line: #EFE3C2;
+    --coral: #D65A44;
+    --coral-bg: #FBEAE6;
+    --ok: #2E7D5B;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(23,69,61,0.05) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(23,69,61,0.05) 0%, transparent 40%);
+    font-family: -apple-system, "Segoe UI", "IBM Plex Sans", Arial, sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 40px 16px;
+  }
+
+  .card{
+    width:100%;
+    max-width: 560px;
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(14,46,41,0.04), 0 20px 50px -20px rgba(14,46,41,0.25);
+    overflow: hidden;
+    border: 1px solid var(--sage-line);
+  }
+
+  .header{
+    background: linear-gradient(135deg, var(--yellow) 0%, var(--yellow-deep) 100%);
+    padding: 30px 36px 26px;
+    color: var(--teal-deep);
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+
+  .logo-slot{
+    width: 96px;
+    height: 96px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(14,46,41,0.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    padding: 10px;
+  }
+  .logo-slot img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .header-text h1{
+    font-family: Georgia, "Source Serif Pro", serif;
+    font-size: 21px;
+    margin: 0 0 4px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--teal-deep);
+  }
+  .header-text p{
+    margin:0;
+    font-size: 13.5px;
+    color: rgba(14,46,41,0.65);
+    font-weight: 500;
+  }
+
+  form{
+    padding: 32px 36px 36px;
+  }
+
+  .field{
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  label{
+    display:block;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin-bottom: 7px;
+  }
+
+  input, select{
+    width:100%;
+    padding: 11px 14px;
+    border-radius: 9px;
+    border: 1.5px solid var(--sage-line);
+    background: #FCFDFC;
+    font-size: 15px;
+    color: var(--ink);
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  input:focus, select:focus{
+    outline:none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(23,69,61,0.10);
+  }
+
+  input.error{
+    border-color: var(--coral);
+    background: var(--coral-bg);
+  }
+  input.error:focus{
+    box-shadow: 0 0 0 3px rgba(214,90,68,0.14);
+  }
+
+  .error-msg{
+    display:none;
+    align-items:center;
+    gap:6px;
+    color: var(--coral);
+    font-size: 13px;
+    margin-top: 7px;
+    font-weight: 500;
+  }
+  .error-msg.show{ display:flex; }
+
+  .ok-msg{
+    display:none;
+    align-items:center;
+    gap:6px;
+    color: var(--ok);
+    font-size: 13px;
+    margin-top: 7px;
+    font-weight: 500;
+  }
+  .ok-msg.show{ display:flex; }
+
+  .hint{
+    font-size: 12px;
+    color: #94A39D;
+    margin-top: 6px;
+  }
+
+  button{
+    width:100%;
+    margin-top: 8px;
+    padding: 13px;
+    border-radius: 9px;
+    border: none;
+    background: var(--yellow);
+    color: var(--teal-deep);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  button:hover{ background: var(--yellow-deep); }
+  button:active{ transform: translateY(1px); }
+  button:disabled{
+    background: #EAD9A0;
+    color: rgba(14,46,41,0.55);
+    cursor: not-allowed;
+  }
+
+  .banner{
+    display:none;
+    background: #E8F4EE;
+    border: 1px solid #BEDFCC;
+    color: var(--ok);
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    align-items:center;
+    gap: 10px;
+  }
+  .banner.show{ display:flex; }
+
+  .demo-note{
+    text-align:center;
+    font-size: 11.5px;
+    color: #A7B3AD;
+    margin-top: 18px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <div class="logo-slot"><img src="data:image/png;base64,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" alt="Logo Medtrition"></div>
+    <div class="header-text">
+      <h1>Registro de Profesionales</h1>
+      <p>More than nutrition, Medtrition®</p>
+    </div>
+  </div>
+
+  <form id="regForm" onsubmit="return false;">
+    <div class="banner" id="successBanner">✓ Registro guardado correctamente.</div>
+
+    <div class="field">
+      <label for="nombres">Nombres</label>
+      <input type="text" id="nombres" required>
+    </div>
+
+    <div class="field">
+      <label for="cedula">Cédula</label>
+      <input type="text" id="cedula" required inputmode="numeric">
+      <div class="error-msg" id="cedulaError">⚠ Esta cédula ya está registrada.</div>
+      <div class="ok-msg" id="cedulaOk">✓ Cédula disponible.</div>
+      <div class="hint">Prueba con 123456 o 987654 para ver el error (datos de ejemplo).</div>
+    </div>
+
+    <div class="field">
+      <label for="ciudad">Ciudad</label>
+      <input type="text" id="ciudad" required>
+    </div>
+
+    <div class="field">
+      <label for="especialidad">Especialidad</label>
+      <input type="text" id="especialidad" required>
+    </div>
+
+    <div class="field">
+      <label for="institucion">Institución donde labora</label>
+      <input type="text" id="institucion" required>
+    </div>
+
+    <div class="field">
+      <label for="correo">Correo</label>
+      <input type="email" id="correo" required>
+    </div>
+
+    <div class="field">
+      <label for="celular">Celular</label>
+      <input type="tel" id="celular" required inputmode="numeric">
+    </div>
+
+    <button type="submit" id="submitBtn">Registrar</button>
+  </form>
+
+  <div class="demo-note">
+    Conectado a Google Sheets vía Apps Script.
+  </div>
+</div>
+
+<script>
+  // 👉 Reemplaza esto con la URL de tu Web App de Apps Script (paso 4 de las instrucciones)
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzx7XisDTAhzcRvNISJ06yfwQnEbOnKV1q1-Ds7WmHTvyxmhPbPaLf7vR6m6txjKgw5kw/exec";
+
+  const cedulaInput = document.getElementById('cedula');
+  const cedulaError = document.getElementById('cedulaError');
+  const cedulaOk = document.getElementById('cedulaOk');
+  const submitBtn = document.getElementById('submitBtn');
+  const form = document.getElementById('regForm');
+  const banner = document.getElementById('successBanner');
+
+  let cedulaDuplicada = false;
+  let checkingCedula = false;
+
+  async function callBackend(payload){
+    const res = await fetch(WEB_APP_URL, {
+      method: "POST",
+      // text/plain evita el preflight CORS que Apps Script no maneja bien
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    return res.json();
+  }
+
+  async function checkCedula(){
+    const val = cedulaInput.value.trim();
+    cedulaError.classList.remove('show');
+    cedulaOk.classList.remove('show');
+    cedulaInput.classList.remove('error');
+    cedulaDuplicada = false;
+
+    if(val.length === 0) return;
+
+    checkingCedula = true;
+    try{
+      const data = await callBackend({ action: "check", cedula: val });
+      if(data.exists){
+        cedulaError.classList.add('show');
+        cedulaInput.classList.add('error');
+        cedulaDuplicada = true;
+      } else {
+        cedulaOk.classList.add('show');
+      }
+    } catch(err){
+      console.error("Error consultando cédula:", err);
+    } finally {
+      checkingCedula = false;
+    }
+  }
+
+  cedulaInput.addEventListener('blur', checkCedula);
+  cedulaInput.addEventListener('input', () => {
+    cedulaError.classList.remove('show');
+    cedulaOk.classList.remove('show');
+    cedulaInput.classList.remove('error');
+  });
+
+  form.addEventListener('submit', async () => {
+    await checkCedula();
+    if(cedulaDuplicada){
+      cedulaInput.focus();
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Guardando...";
+
+    try{
+      const data = await callBackend({
+        action: "save",
+        nombres: document.getElementById('nombres').value.trim(),
+        cedula: cedulaInput.value.trim(),
+        ciudad: document.getElementById('ciudad').value.trim(),
+        especialidad: document.getElementById('especialidad').value.trim(),
+        institucion: document.getElementById('institucion').value.trim(),
+        correo: document.getElementById('correo').value.trim(),
+        celular: document.getElementById('celular').value.trim()
+      });
+
+      if(data.success){
+        banner.classList.add('show');
+        form.reset();
+        cedulaOk.classList.remove('show');
+        setTimeout(() => banner.classList.remove('show'), 4000);
+      } else if(data.exists){
+        cedulaError.classList.add('show');
+        cedulaInput.classList.add('error');
+        cedulaInput.focus();
+      }
+    } catch(err){
+      console.error("Error guardando registro:", err);
+      alert("No se pudo guardar el registro. Intenta de nuevo.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Registrar";
+    }
+  });
+</script>
+
+</body>
+</html>
