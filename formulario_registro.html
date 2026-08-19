@@ -353,10 +353,14 @@
         cedulaError.classList.add('show');
         cedulaInput.classList.add('error');
         cedulaInput.focus();
+      } else if(data.error){
+        alert("Error del servidor al guardar:\n\n" + (data.message || JSON.stringify(data)));
+      } else {
+        alert("Respuesta inesperada del servidor:\n\n" + JSON.stringify(data));
       }
     } catch(err){
       console.error("Error guardando registro:", err);
-      alert("No se pudo guardar el registro. Intenta de nuevo.");
+      alert("No se pudo guardar el registro.\n\nDetalle técnico: " + err.message);
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = "Registrar";
